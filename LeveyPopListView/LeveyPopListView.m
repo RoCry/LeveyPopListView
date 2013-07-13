@@ -21,7 +21,6 @@
 @implementation LeveyPopListView {
     UITableView *_tableView;
     NSString *_title;
-    NSArray *_options;
 }
 
 #pragma mark - initialization & cleaning up
@@ -58,7 +57,12 @@
     return self;
 }
 
-
+- (void)setOptions:(NSArray *)options {
+    if (_options != options) {        
+        _options = options;
+        [_tableView reloadData];
+    }
+}
 #pragma mark - Private Methods
 - (void)fadeIn {
     self.transform = CGAffineTransformMakeScale(1.3, 1.3);

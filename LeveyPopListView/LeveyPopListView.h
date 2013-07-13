@@ -10,6 +10,7 @@
 @protocol LeveyPopListViewDelegate;
 @interface LeveyPopListView : UIView <UITableViewDataSource, UITableViewDelegate>
 
+@property (nonatomic, strong) NSArray *options;
 @property (nonatomic, weak) id<LeveyPopListViewDelegate> delegate;
 @property (copy, nonatomic) void(^handlerBlock)(NSInteger anIndex);
 
