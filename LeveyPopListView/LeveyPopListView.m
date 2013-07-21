@@ -50,9 +50,18 @@
 - (id)initWithTitle:(NSString *)aTitle 
             options:(NSArray *)aOptions 
             handler:(void (^)(NSInteger anIndex))aHandlerBlock {
+    return [self initWithTitle:aTitle options:aOptions clicked:aHandlerBlock dismiss:nil];
+}
+
+- (id)initWithTitle:(NSString *)aTitle
+            options:(NSArray *)aOptions
+            clicked:(void (^)(NSInteger anIndex))clickedBlock
+            dismiss:(void (^)())dismissBlock {
     
-    if(self = [self initWithTitle:aTitle options:aOptions])
-        self.handlerBlock = aHandlerBlock;
+    if(self = [self initWithTitle:aTitle options:aOptions]) {
+        self.clickedBlock = clickedBlock;
+        self.dismissBlock = dismissBlock;
+    }
     
     return self;
 }
@@ -136,8 +145,10 @@
     if ([_delegate respondsToSelector:@selector(leveyPopListView:didSelectedIndex:)])
         [_delegate leveyPopListView:self didSelectedIndex:[indexPath row]];
     
-    if (_handlerBlock)
-        _handlerBlock(indexPath.row);
+    if (self.clickedBlock) {
+        self.clickedBlock(indexPath.row);
+        self.clickedBlock = nil;
+    }
     
     // dismiss self
     [self fadeOut];
@@ -147,6 +158,11 @@
     // tell the delegate the cancellation
     if ([_delegate respondsToSelector:@selector(leveyPopListViewDidCancel)])
         [_delegate leveyPopListViewDidCancel];
+    
+    if (self.dismissBlock) {
+        self.dismissBlock();
+        self.dismissBlock = nil;
+    }
     
     // dismiss self
     [self fadeOut];
